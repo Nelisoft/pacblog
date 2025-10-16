@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <div class="card shadow-sm p-4">
+        <h2 class="text-center mb-4">Delete Post</h2>
+         <p class="text-center">Are you sure you want to delete <strong>"{{ post.title }}"</strong>?</p>
+{% if messages %}
+{% for message in messages %}
+{{message}}
+{% endfor %}
+{% endif %}
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn-danger w-100">Delete Post</button>
+          <a href="{% url 'home' %}" class="btn btn-secondary my-2 d-block">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

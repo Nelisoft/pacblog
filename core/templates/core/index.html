@@ -1,0 +1,187 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Blogge | Personal Blog Site | Home{% endblock title %}
+{% block content %}
+<section class="featured">
+  <div class="container">
+    {% for p in featureds %}
+    <div class="row">
+      <div class="col-12">
+        <article class="featured-post">
+          <div class="featured-post-content">
+            <div class="featured-post-author">
+             <img src="{% static 'core/images/author.png' %}" alt="author" />
+              <p>By <span>{{p.author}}</span></p>
+            </div>
+            <a href="{% url 'post-details' p.id %}" class="featured-post-title">
+              {{p.title}} 
+            </a>
+            <ul class="featured-post-meta">
+              <li>
+                <i class="fa fa-clock-o"></i>
+                {{p.created_at | timesince}} ago
+              </li>
+            </ul>
+          </div>
+          <div class="featured-post-thumb">
+            <img src="{{p.img.url}}" alt="feature-post-thumb" />
+          </div>
+        </article>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="blog">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="blog-section-title">
+          <h2>Articles</h2>
+          <p>View the latest news on Blogger</p>
+        </div>
+        {% for p in page_obj  %}
+        <article class="blog-post">
+          <div class="blog-post-thumb">
+            <img src="{{p.img.url}}" alt="blog-thum" />
+          </div>
+          <div class="blog-post-content">
+            <div class="blog-post-tag">
+              <a href="category.html">{{p.category}}</a>
+            </div>
+            <div class="blog-post-title">
+              <a href="{% url 'post-details' p.id %}">{{p.title}}</a>
+            </div>
+            <div class="blog-post-meta">
+              <ul>
+                <li>By <a href="about.html">{{p.author}}</a></li>
+                <li>
+                  <i class="fa fa-clock-o"></i>
+                  {{p.created_at |timesince}} ago
+                </li>
+              </ul>
+            </div>
+            <p>
+             {{ p.body|safe |truncatewords:30 }}
+            </p>
+            {% if request.user == p.author %}
+               <a  href="{% url 'post-details' p.id %}" class="blog-post-action">read more <i class="fa fa-angle-right"></i></a>
+            <a  href="{% url 'update' p.id %}" class="blog-post-action">Edit <i class="fa fa-angle-right"></i></a>
+            <a  href="{% url 'delete' p.id %}" class="blog-post-action">Delete <i class="fa fa-angle-right"></i></a>
+            {% else %}
+              <a  href="{% url 'post-details' p.id %}" class="blog-post-action">read more <i class="fa fa-angle-right"></i></a>
+            {% endif %}
+            
+      
+          </div>
+        </article>
+        {% endfor %}
+        <div class="blog-post-pagination">
+          <nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Previous</span>
+        </li>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Next</span>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="blog-post-widget">
+          <div class="latest-widget-title">
+            <h2>Trending post</h2>
+          </div>
+          {% for p in trending %}
+          <div class="latest-widget">
+            <div class="latest-widget-thum">
+              <a href="{% url 'post-details' p.id %}">
+                <img src="{{p.img.url}}" alt="blog-thum" /></a>
+              <div class="icon">
+                <a href="{% url 'post-details' p.id %}">
+                 <img src="{% static 'core/images/blog/icon.svg' %}" alt="icon" /></a>
+              </div>
+            </div>
+            <div class="latest-widget-content">
+              <div class="content-title">
+                <a href="{% url 'post-details' p.id %}">{{p.title}}</a>
+              </div>
+              <div class="content-meta">
+                <ul>
+                  <li>
+                    <i class="fa fa-clock-o"></i>
+                    {{p.created_at | timesince}} ago
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="instagram">
+  <a href="#">
+    <i class="fa fa-instagram" aria-hidden="true"></i>
+    <span>@Mary_Astor</span>
+  </a>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="instagram-item">
+
+          <div class="instagram-item-thum">
+           <img src="{% static 'core/images/blog/case-studies-1.png' %}" alt="image">
+          </div>
+          <div class="instagram-item-thum">
+           <img src="{% static 'core/images/blog/case-studies-2.png' %}" alt="image">
+          </div>
+          <div class="instagram-item-thum">
+           <img src="{% static 'core/images/blog/case-studies-3.png' %}" alt="image">
+          </div>
+          <div class="instagram-item-thum">
+           <img src="{% static 'core/images/blog/case-studies-4.png' %}" alt="image">
+          </div>
+          <div class="instagram-item-thum">
+           <img src="{% static 'core/images/blog/case-studies-5.png' %}" alt="image">
+          </div>
+          <div class="instagram-item-thum">
+           <img src="{% static 'core/images/blog/case-studies-6.png' %}" alt="image">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{% endblock content %}
